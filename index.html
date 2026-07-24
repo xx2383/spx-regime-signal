@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPX Regime Signal</title>
 <style>
 :root {
@@ -267,6 +272,8 @@ canvas { width: 100%; display: block; }
   line-height: 1.6;
 }
 </style>
+</head>
+<body>
 
 <div class="card">
   <div class="masthead">
@@ -639,3 +646,5 @@ drawMain();
 drawBrush();
 window.addEventListener('resize', () => { drawMain(); drawBrush(); if (btDrawn) drawBacktestChart(); });
 </script>
+</body>
+</html>
