@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &middot; SPX Regime Signal</title>
+<style>
+
+:root {
+  --bg: #eef1f0;
+  --surface: #ffffff;
+  --ink: #16211f;
+  --ink-soft: #4c5a57;
+  --accent: #9c6b2e;
+  --accent-soft: rgba(156,107,46,0.12);
+  --bull: #2f7d5a;
+  --bull-soft: rgba(47,125,90,0.14);
+  --bear: #b1443a;
+  --bear-soft: rgba(177,68,58,0.14);
+  --line: #d7dcda;
+  --shadow: 0 1px 2px rgba(22,33,31,0.06), 0 8px 24px rgba(22,33,31,0.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1513; --surface: #161e1c; --ink: #e7ece9; --ink-soft: #a3b0ac;
+    --accent: #c99447; --accent-soft: rgba(201,148,71,0.16);
+    --bull: #4ea37b; --bull-soft: rgba(78,163,123,0.16);
+    --bear: #d97469; --bear-soft: rgba(217,116,105,0.16); --line: #263230;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1513; --surface: #161e1c; --ink: #e7ece9; --ink-soft: #a3b0ac;
+  --accent: #c99447; --accent-soft: rgba(201,148,71,0.16);
+  --bull: #4ea37b; --bull-soft: rgba(78,163,123,0.16);
+  --bear: #d97469; --bear-soft: rgba(217,116,105,0.16); --line: #263230;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+}
+:root[data-theme="light"] {
+  --bg: #eef1f0; --surface: #ffffff; --ink: #16211f; --ink-soft: #4c5a57;
+  --accent: #9c6b2e; --accent-soft: rgba(156,107,46,0.12);
+  --bull: #2f7d5a; --bull-soft: rgba(47,125,90,0.14);
+  --bear: #b1443a; --bear-soft: rgba(177,68,58,0.14); --line: #d7dcda;
+  --shadow: 0 1px 2px rgba(22,33,31,0.06), 0 8px 24px rgba(22,33,31,0.05);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex; justify-content: center; padding: 32px 16px;
+}
+.card {
+  width: 100%; max-width: min(880px, 96vw); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.masthead {
+  padding: 22px 28px 0; display: flex; justify-content: space-between; align-items: baseline;
+}
+.eyebrow {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-soft); font-weight: 600;
+}
+.nav { display: flex; gap: 14px; }
+.nav a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid transparent; font-size: 12px; }
+.nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.nav a.current { color: var(--accent); }
+h1 {
+  font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 34px; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance;
+  margin: 10px 28px 4px;
+}
+.subtitle { margin: 0 28px 24px; color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+section { padding: 0 28px 26px; }
+section h2 {
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+  font-weight: 700; margin: 0 0 10px;
+}
+section p { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin: 0 0 12px; }
+section ul { margin: 0 0 12px; padding-left: 20px; }
+section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bottom: 6px; }
+.callout {
+  margin: 0 28px 26px; padding: 14px 16px; border-left: 2px solid var(--accent);
+  background: var(--accent-soft); font-size: 13.5px; line-height: 1.6; color: var(--ink-soft);
+}
+.callout strong { color: var(--ink); }
+.footer {
+  padding: 14px 28px 20px; font-size: 11px; color: var(--ink-soft);
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  border-top: 1px solid var(--line);
+}
+.footer a { color: var(--ink-soft); }
+
+
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="masthead">
+    <span class="eyebrow">SPX &middot; Market Regime Model</span>
+    <nav class="nav"><a href="index.html">Signal</a><a href="framework.html">Framework</a><a href="about.html" class="current">About</a></nav>
+  </div>
+  
+<h1>About this signal</h1>
+<p class="subtitle">What this model is trying to do, and what it isn't.</p>
+
+<section>
+  <h2>Purpose</h2>
+  <p>The goal here is not to maximize returns. It's to sidestep the worst outcomes. The model
+  tries to identify when SPX has entered a persistently unfavorable (bearish) regime, so that
+  instead of riding out a severe drawdown, you can hold cash or reallocate elsewhere until
+  conditions improve. Historically this has meant giving up some upside during choppy or
+  ambiguous periods, in exchange for avoiding the deepest, most damaging drawdowns (2008,
+  2020, and similar episodes).</p>
+</section>
+
+<section>
+  <h2>How to read the signal</h2>
+  <p>The label shown on the signal page is a forecast for the <strong>next trading session</strong>,
+  built from data through the most recent close &mdash; it is not a statement about the day
+  already shown. If the page says "Bearish" as of a given date, that reflects the model's
+  read on the session that follows, based on everything known up to that date's close.</p>
+</section>
+
+<section>
+  <h2>Limitations</h2>
+  <ul>
+    <li><strong>No transaction costs or slippage.</strong> The backtest assumes frictionless
+    0/1 switching. Actual turnover from a six-month retrain cadence plus regime flips is not
+    free, and can meaningfully erode the numbers shown.</li>
+    <li><strong>No liquidity modeling.</strong> Position changes are assumed to execute at the
+    closing price with unlimited size.</li>
+    <li><strong>Single asset.</strong> This is built and tested on SPX alone. It has not been
+    validated as a general-purpose regime signal for other assets.</li>
+    <li><strong>Model instability near the live edge.</strong> The most recent walk-forward
+    windows can be noisier than the long-run historical average &mdash; treat recent regime
+    flips with appropriate skepticism.</li>
+  </ul>
+</section>
+
+<div class="callout">
+  <strong>Not investment advice.</strong> This page is shared for informational and educational
+  purposes only. It is not a recommendation to buy, sell, or hold any security. We accept no
+  responsibility or liability for trading decisions anyone else makes based on this signal or
+  the backtest results shown here. Do your own research.
+</div>
+
+  <div class="footer">
+    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; SPX / VIX via yfinance &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
+  </div>
+</div>
+</body>
+</html>

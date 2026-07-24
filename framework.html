@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Framework &middot; SPX Regime Signal</title>
+<style>
+
+:root {
+  --bg: #eef1f0;
+  --surface: #ffffff;
+  --ink: #16211f;
+  --ink-soft: #4c5a57;
+  --accent: #9c6b2e;
+  --accent-soft: rgba(156,107,46,0.12);
+  --bull: #2f7d5a;
+  --bull-soft: rgba(47,125,90,0.14);
+  --bear: #b1443a;
+  --bear-soft: rgba(177,68,58,0.14);
+  --line: #d7dcda;
+  --shadow: 0 1px 2px rgba(22,33,31,0.06), 0 8px 24px rgba(22,33,31,0.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1513; --surface: #161e1c; --ink: #e7ece9; --ink-soft: #a3b0ac;
+    --accent: #c99447; --accent-soft: rgba(201,148,71,0.16);
+    --bull: #4ea37b; --bull-soft: rgba(78,163,123,0.16);
+    --bear: #d97469; --bear-soft: rgba(217,116,105,0.16); --line: #263230;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1513; --surface: #161e1c; --ink: #e7ece9; --ink-soft: #a3b0ac;
+  --accent: #c99447; --accent-soft: rgba(201,148,71,0.16);
+  --bull: #4ea37b; --bull-soft: rgba(78,163,123,0.16);
+  --bear: #d97469; --bear-soft: rgba(217,116,105,0.16); --line: #263230;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+}
+:root[data-theme="light"] {
+  --bg: #eef1f0; --surface: #ffffff; --ink: #16211f; --ink-soft: #4c5a57;
+  --accent: #9c6b2e; --accent-soft: rgba(156,107,46,0.12);
+  --bull: #2f7d5a; --bull-soft: rgba(47,125,90,0.14);
+  --bear: #b1443a; --bear-soft: rgba(177,68,58,0.14); --line: #d7dcda;
+  --shadow: 0 1px 2px rgba(22,33,31,0.06), 0 8px 24px rgba(22,33,31,0.05);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex; justify-content: center; padding: 32px 16px;
+}
+.card {
+  width: 100%; max-width: min(880px, 96vw); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.masthead {
+  padding: 22px 28px 0; display: flex; justify-content: space-between; align-items: baseline;
+}
+.eyebrow {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-soft); font-weight: 600;
+}
+.nav { display: flex; gap: 14px; }
+.nav a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid transparent; font-size: 12px; }
+.nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.nav a.current { color: var(--accent); }
+h1 {
+  font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 34px; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance;
+  margin: 10px 28px 4px;
+}
+.subtitle { margin: 0 28px 24px; color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+section { padding: 0 28px 26px; }
+section h2 {
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+  font-weight: 700; margin: 0 0 10px;
+}
+section p { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin: 0 0 12px; }
+section ul { margin: 0 0 12px; padding-left: 20px; }
+section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bottom: 6px; }
+.callout {
+  margin: 0 28px 26px; padding: 14px 16px; border-left: 2px solid var(--accent);
+  background: var(--accent-soft); font-size: 13.5px; line-height: 1.6; color: var(--ink-soft);
+}
+.callout strong { color: var(--ink); }
+.footer {
+  padding: 14px 28px 20px; font-size: 11px; color: var(--ink-soft);
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  border-top: 1px solid var(--line);
+}
+.footer a { color: var(--ink-soft); }
+
+
+.pipeline { padding: 4px 28px 26px; }
+.stage { display: flex; gap: 14px; align-items: flex-start; }
+.stage-num {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft);
+  color: var(--accent); font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.stage-body { padding-top: 2px; }
+.stage-title { font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+.stage-desc { font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+.stage-final .stage-num { background: var(--bull-soft); color: var(--bull); }
+.arrow { color: var(--line); font-size: 16px; padding: 2px 0 2px 12px; }
+.tag {
+  display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11.5px;
+  font-weight: 600; letter-spacing: 0.02em;
+}
+.tag.bull { background: var(--bull-soft); color: var(--bull); }
+.tag.bear { background: var(--bear-soft); color: var(--bear); }
+
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="masthead">
+    <span class="eyebrow">SPX &middot; Market Regime Model</span>
+    <nav class="nav"><a href="index.html">Signal</a><a href="framework.html" class="current">Framework</a><a href="about.html">About</a></nav>
+  </div>
+  
+<h1>Model framework</h1>
+<p class="subtitle">A two-stage jump model &rarr; classifier pipeline, retrained on a rolling window.</p>
+
+<div class="pipeline">
+  <div class="stage">
+    <div class="stage-num">1</div>
+    <div class="stage-body">
+      <div class="stage-title">Market &amp; macro data</div>
+      <div class="stage-desc">SPX, VIX, a bond-market proxy (price levels) &middot; Treasury yields and yield-curve slope from FRED</div>
+    </div>
+  </div>
+  <div class="arrow">&darr;</div>
+  <div class="stage">
+    <div class="stage-num">2</div>
+    <div class="stage-body">
+      <div class="stage-title">Feature engineering</div>
+      <div class="stage-desc">EWMA mean return, downside deviation &amp; Sortino ratio (5/10/21-day) &middot; yield-curve slope &middot; VIX level &middot; SPX&ndash;bond rolling correlation</div>
+    </div>
+  </div>
+  <div class="arrow">&darr;</div>
+  <div class="stage">
+    <div class="stage-num">3</div>
+    <div class="stage-body">
+      <div class="stage-title">Stage 1 &mdash; Statistical jump model</div>
+      <div class="stage-desc">Penalized K-means clusters historical days into <span class="tag bull">bullish</span> / <span class="tag bear">bearish</span> regimes, with a persistence penalty that discourages noisy day-to-day flipping</div>
+    </div>
+  </div>
+  <div class="arrow">&darr;</div>
+  <div class="stage">
+    <div class="stage-num">4</div>
+    <div class="stage-body">
+      <div class="stage-title">Stage 2 &mdash; XGBoost classifier</div>
+      <div class="stage-desc">Learns to predict the jump model's regime label from the feature set, so regimes can be forecast forward rather than only labeled in hindsight</div>
+    </div>
+  </div>
+  <div class="arrow">&darr;</div>
+  <div class="stage">
+    <div class="stage-num">5</div>
+    <div class="stage-body">
+      <div class="stage-title">Rolling walk-forward retraining</div>
+      <div class="stage-desc">15-year training window, retrained every 6 months, hyperparameters selected on a held-out validation slice &mdash; each forecast uses only information available at that point in time</div>
+    </div>
+  </div>
+  <div class="arrow">&darr;</div>
+  <div class="stage stage-final">
+    <div class="stage-num">6</div>
+    <div class="stage-body">
+      <div class="stage-title">Daily forecast &rarr; position</div>
+      <div class="stage-desc"><span class="tag bull">Bullish</span> &rarr; hold SPX &middot; <span class="tag bear">Bearish</span> &rarr; hold cash</div>
+    </div>
+  </div>
+</div>
+
+<p style="padding: 0 28px; font-size: 13px; color: var(--ink-soft);">See <a href="about.html" style="color:var(--accent)">About</a> for what this is (and isn't) meant for, and its known limitations.</p>
+
+  <div class="footer">
+    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; SPX / VIX via yfinance &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
+  </div>
+</div>
+</body>
+</html>
