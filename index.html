@@ -255,6 +255,16 @@ canvas { width: 100%; display: block; }
   cursor: pointer;
 }
 .period-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.lookback-row {
+  padding: 0 28px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lookback-note {
+  font-size: 11.5px;
+  color: var(--accent);
+}
 .metrics-table {
   width: 100%;
   border-collapse: collapse;
@@ -325,8 +335,8 @@ canvas { width: 100%; display: block; }
   </div>
   <div class="headline">
     <div>
-      <div class="pill bull"><span class="dot"></span>BULLISH</div>
-      <div class="regime bull">Bullish</div>
+      <div class="pill bull" id="headlinePill"><span class="dot"></span><span id="pillText">BULLISH</span></div>
+      <div class="regime bull" id="headlineRegime">Bullish</div>
     </div>
   </div>
   <div class="price-row">
@@ -334,6 +344,17 @@ canvas { width: 100%; display: block; }
     <span class="value">7,785.76</span>
   </div>
   <div class="forecast-note">This is the forecast for the <strong>next trading session</strong>, generated from data through the 2026-08-14 close — not a call on 2026-08-14 itself. See <a href="about.html" style="color:var(--accent)">About</a> for what this signal is (and isn't) meant for.</div>
+
+  <div class="lookback-row">
+    <span class="period-label">Lookback</span>
+    <select id="globalLbSelect" class="period-select">
+      <option value="1">N=1 (raw daily)</option>
+      <option value="5">N=5</option>
+      <option value="10">N=10</option>
+      <option value="20">N=20</option>
+    </select>
+    <span class="lookback-note" id="lookbackNote"></span>
+  </div>
 
   <div class="chart-wrap">
     <div class="chart-label">
@@ -350,7 +371,7 @@ canvas { width: 100%; display: block; }
   </div>
 
   <div class="facts">
-    <div class="fact"><div class="k">Position</div><div class="v">1 (hold SPX)</div></div>
+    <div class="fact"><div class="k">Position</div><div class="v" id="positionFact">1 (hold SPX)</div></div>
     <div class="fact"><div class="k">Model last retrained</div><div class="v">2026-07-24</div></div>
     <div class="fact"><div class="k">Signal generated</div><div class="v">2026-08-14 19:19:35</div></div>
   </div>
@@ -412,6 +433,79 @@ const backtest = {"metrics": {"spx": {"annual_return": 0.11234570066808347, "ann
 
 const n = fullHistory.length;
 let selStart = 0, selEnd = n - 1;   // indices into fullHistory, current zoom window
+let currentLb = 1;                  // globally-selected smoothing lookback (chart + headline + backtest panel)
+
+// Trailing N-day average of the raw daily Regime_Forecast, thresholded at >=0.8 -- for DISPLAY
+// (chart shading, headline badge), not for return calculation, so unlike the backtest panel's
+// smoothPosition() this does NOT apply an extra 1-day shift: Regime_Forecast[i] is already
+// displayed elsewhere (the headline) as "the forecast for day i's next session," so the smoothed
+// value for day i should line up with that same convention, not lag it by one more day.
+function smoothForDisplay(raw, lb) {
+  const m = raw.length;
+  if (lb === 1) return raw.slice();
+  const out = new Array(m).fill(null);
+  for (let i = lb - 1; i < m; i++) {
+    let sum = 0, ok = true;
+    for (let k = i - lb + 1; k <= i; k++) {
+      if (raw[k] == null) { ok = false; break; }
+      sum += raw[k];
+    }
+    if (ok) out[i] = (sum / lb) >= 0.8 ? 1 : 0;
+  }
+  return out;
+}
+
+function computeDisplayHistory(lb) {
+  if (lb === 1) return fullHistory;
+  const raw = fullHistory.map(h => h.Regime_Forecast);
+  const smoothed = smoothForDisplay(raw, lb);
+  return fullHistory.map((h, i) => ({ DateTime: h.DateTime, SPX: h.SPX, Regime_Forecast: smoothed[i] }));
+}
+
+let displayHistory = fullHistory;   // the array the chart/headline actually render from
+
+// Updates the Bullish/Bearish pill, headline word, and Position fact to whatever the currently
+// selected lookback says as of the last day of full history -- NOT a re-run of the daily
+// production forecast, just a client-side re-smoothing of the same historical Regime_Forecast
+// series already shown in the chart above.
+function updateHeadline() {
+  const last = displayHistory[displayHistory.length - 1];
+  const pill = document.getElementById('headlinePill');
+  const pillText = document.getElementById('pillText');
+  const regimeEl = document.getElementById('headlineRegime');
+  const posFact = document.getElementById('positionFact');
+  const note = document.getElementById('lookbackNote');
+  if (last.Regime_Forecast == null) {
+    pillText.textContent = 'UNKNOWN';
+    regimeEl.textContent = 'Unknown';
+    pill.classList.remove('bull', 'bear');
+    regimeEl.classList.remove('bull', 'bear');
+    posFact.textContent = '–';
+  } else {
+    const isBull = last.Regime_Forecast === 1;
+    const cls = isBull ? 'bull' : 'bear';
+    pill.classList.remove('bull', 'bear'); pill.classList.add(cls);
+    regimeEl.classList.remove('bull', 'bear'); regimeEl.classList.add(cls);
+    pillText.textContent = isBull ? 'BULLISH' : 'BEARISH';
+    regimeEl.textContent = isBull ? 'Bullish' : 'Bearish';
+    posFact.textContent = isBull ? '1 (hold SPX)' : '0 (cash)';
+  }
+  note.textContent = currentLb === 1 ? '' : `showing the N=${currentLb} smoothed view — the official daily forecast above is always N=1`;
+}
+
+function setLookback(lb) {
+  currentLb = lb;
+  const gSel = document.getElementById('globalLbSelect');
+  if (gSel.value !== String(lb)) gSel.value = String(lb);
+  const bSel = document.getElementById('lbSelect');
+  if (bSel && bSel.value !== String(lb)) bSel.value = String(lb);
+  displayHistory = computeDisplayHistory(lb);
+  drawMain();
+  drawBrush();
+  updateHeadline();
+  const panelEl = document.getElementById('backtestPanel');
+  if (panelEl && panelEl.classList.contains('open')) updateBacktestView();
+}
 
 function colors() {
   const s = getComputedStyle(document.documentElement);
@@ -456,6 +550,7 @@ function drawSeries(ctx, cssW, cssH, data, opts) {
   if (opts.shading) {
     for (let i = 0; i < m; i++) {
       const regime = data[i].Regime_Forecast;
+      if (regime == null) continue;   // no smoothed value yet during a longer lookback's warm-up
       ctx.fillStyle = regime === 1 ? c.bullSoft : c.bearSoft;
       const x0 = i === 0 ? padL : (x(i - 1) + x(i)) / 2;
       const x1 = i === m - 1 ? padL + plotW : (x(i) + x(i + 1)) / 2;
@@ -514,16 +609,16 @@ const tooltip = document.getElementById('tooltip');
 let mainGeom = null;
 
 function regimeSegment(globalIdx) {
-  const regime = fullHistory[globalIdx].Regime_Forecast;
+  const regime = displayHistory[globalIdx].Regime_Forecast;
   let lo = globalIdx, hi = globalIdx;
-  while (lo > 0 && fullHistory[lo - 1].Regime_Forecast === regime) lo--;
-  while (hi < n - 1 && fullHistory[hi + 1].Regime_Forecast === regime) hi++;
-  return { regime, start: fullHistory[lo].DateTime, end: fullHistory[hi].DateTime };
+  while (lo > 0 && displayHistory[lo - 1].Regime_Forecast === regime) lo--;
+  while (hi < n - 1 && displayHistory[hi + 1].Regime_Forecast === regime) hi++;
+  return { regime, start: displayHistory[lo].DateTime, end: displayHistory[hi].DateTime };
 }
 
 function drawMain() {
   const { ctx, cssW, cssH } = fitCanvas(mainCanvas, 280);
-  const slice = fullHistory.slice(selStart, selEnd + 1);
+  const slice = displayHistory.slice(selStart, selEnd + 1);
   mainGeom = drawSeries(ctx, cssW, cssH, slice, {
     padT: 8, padB: 20, shading: true, gridlines: true, endpoint: true, showDates: true, lineWidth: 1.75,
   });
@@ -537,7 +632,11 @@ mainCanvas.addEventListener('mousemove', (e) => {
   const globalIdx = selStart + localIdx;
   const seg = regimeSegment(globalIdx);
   const c = colors();
-  tooltip.innerHTML = `<span class="swatch" style="background:${seg.regime === 1 ? c.bull : c.bear}"></span>${seg.regime === 1 ? 'Bullish' : 'Bearish'}: ${seg.start} to ${seg.end}`;
+  if (seg.regime == null) {
+    tooltip.innerHTML = `Not enough history yet for N=${currentLb} smoothing`;
+  } else {
+    tooltip.innerHTML = `<span class="swatch" style="background:${seg.regime === 1 ? c.bull : c.bear}"></span>${seg.regime === 1 ? 'Bullish' : 'Bearish'}: ${seg.start} to ${seg.end}`;
+  }
   const wrapRect = mainCanvas.parentElement.getBoundingClientRect();
   tooltip.style.left = (e.clientX - wrapRect.left) + 'px';
   tooltip.style.top = (e.clientY - wrapRect.top - 12) + 'px';
@@ -551,7 +650,7 @@ let brushGeom = null;
 
 function drawBrush() {
   const { ctx, cssW, cssH } = fitCanvas(brushCanvas, 56);
-  brushGeom = drawSeries(ctx, cssW, cssH, fullHistory, {
+  brushGeom = drawSeries(ctx, cssW, cssH, displayHistory, {
     padT: 4, padB: 4, shading: true, gridlines: false, endpoint: false, showDates: false, lineWidth: 1,
   });
   if (!brushGeom) return;
@@ -871,7 +970,8 @@ toggleBtn.addEventListener('click', () => {
   if (open) updateBacktestView();
 });
 periodSelect.addEventListener('change', updateBacktestView);
-lbSelect.addEventListener('change', updateBacktestView);
+lbSelect.addEventListener('change', () => setLookback(parseInt(lbSelect.value, 10)));
+document.getElementById('globalLbSelect').addEventListener('change', (e) => setLookback(parseInt(e.target.value, 10)));
 
 drawMain();
 drawBrush();
