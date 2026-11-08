@@ -349,7 +349,6 @@ canvas { width: 100%; display: block; }
   <div class="lookback-row">
     <span class="period-label">Lookback</span>
     <select id="globalLbSelect" class="period-select">
-      <option value="raw">Raw daily forecast</option>
       <option value="5" selected>Main &middot; 5-day confirmation</option>
       <option value="10">Extension &middot; N=10</option>
       <option value="20">Extension &middot; N=20</option>
@@ -375,7 +374,7 @@ canvas { width: 100%; display: block; }
   <div class="facts">
     <div class="fact"><div class="k">Position</div><div class="v" id="positionFact">1 (hold the index)</div></div>
     <div class="fact"><div class="k">Model last retrained</div><div class="v">2026-07-01</div></div>
-    <div class="fact"><div class="k">Signal generated</div><div class="v">2026-11-08 02:33:06</div></div>
+    <div class="fact"><div class="k">Signal generated</div><div class="v">2026-11-08 02:36:00</div></div>
   </div>
 
   <div class="backtest-toggle-row">
@@ -396,8 +395,7 @@ canvas { width: 100%; display: block; }
       </select>
       <span class="period-label" style="margin-left: 10px;">Lookback</span>
       <select id="lbSelect" class="period-select">
-        <option value="raw">Raw daily forecast</option>
-      <option value="5" selected>Main &middot; 5-day confirmation</option>
+        <option value="5" selected>Main &middot; 5-day confirmation</option>
       <option value="10">Extension &middot; N=10</option>
       <option value="20">Extension &middot; N=20</option>
       <option value="30">Extension &middot; N=30</option>
@@ -425,7 +423,7 @@ canvas { width: 100%; display: block; }
   <div class="note">Every point in the history is a genuine walk-forward forecast: the model is refit every six months and each day's forecast uses only information available at that date's close. The main signal confirms the model's forecast over five consecutive days before the position changes.</div>
   <div class="footer">
     Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; S&amp;P 500 total return, VIX and bond index via yfinance and the paper's data &middot; T10Y2Y, DGS2, DGS3MO via FRED<br>
-    Full walk-forward history last rebuilt 2026-11-08 02:33:06 &middot; backtest metrics computed 2026-11-08 02:33:07<br>
+    Full walk-forward history last rebuilt 2026-11-08 02:36:00 &middot; backtest metrics computed 2026-11-08 02:36:02<br>
     Position/return data: <a href="data/SP500_positions.csv">S&amp;P 500 (CSV)</a>
   </div>
 </div>
@@ -508,10 +506,8 @@ function updateHeadline() {
     regimeEl.textContent = isBull ? 'Bullish' : 'Bearish';
     posFact.textContent = isBull ? '1 (hold the index)' : '0 (cash)';
   }
-  const rawLast = fullHistory[fullHistory.length - 1].Regime_Forecast;
   note.textContent = currentLb === '5' ? '' :
-    (currentLb === 'raw' ? 'showing the raw daily forecast — the main signal is the 5-day confirmed view'
-                         : `showing the holding-period extension N=${currentLb} — the main signal is the 5-day confirmed view`);
+    `showing the holding-period extension N=${currentLb} — the main signal is the 5-day confirmed view`;
 }
 
 function setLookback(mode) {
