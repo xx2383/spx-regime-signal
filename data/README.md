@@ -16,5 +16,9 @@ Columns of `SP500_positions.csv`:
 - `SP500_Return`: the index's daily total return that day (gross of trading cost).
 - `rf_daily`: the daily risk-free rate (3-month U.S. Treasury yield, compounded to a daily rate).
 
+The model matches the paper's except for one input: the bond leg of the equity-bond correlation feature is VBMFX (the
+Bloomberg U.S. Aggregate index the paper uses is not publicly available), so these positions are close to, but not
+exactly, the paper's (about 96% of the main-position days agree over 2007-2025-08).
+
 `SPX_positions.csv`, `VBMFX_positions.csv` and `USD_positions.csv` are older static exports from an earlier version
 of this project and are no longer updated.
