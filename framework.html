@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Framework &middot; SPX Regime Signal</title>
+<title>Framework &middot; S&amp;P 500 Regime Signal</title>
 <style>
 
 :root {
@@ -117,7 +117,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 <body>
 <div class="card">
   <div class="masthead">
-    <span class="eyebrow">SPX &middot; Market Regime Model</span>
+    <span class="eyebrow">S&amp;P 500 &middot; Market Regime Model</span>
     <nav class="nav"><a href="index.html">Signal</a><a href="framework.html" class="current">Framework</a><a href="about.html">About</a></nav>
   </div>
   
@@ -129,7 +129,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
     <div class="stage-num">1</div>
     <div class="stage-body">
       <div class="stage-title">Market &amp; macro data</div>
-      <div class="stage-desc">SPX, VIX, a bond-market proxy (price levels) &middot; Treasury yields and yield-curve slope from FRED</div>
+      <div class="stage-desc">S&amp;P 500 total-return index, VIX, a bond-market index (price levels) &middot; Treasury yields and yield-curve slope from FRED</div>
     </div>
   </div>
   <div class="arrow">&darr;</div>
@@ -137,7 +137,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
     <div class="stage-num">2</div>
     <div class="stage-body">
       <div class="stage-title">Feature engineering</div>
-      <div class="stage-desc">EWMA mean return, downside deviation &amp; Sortino ratio (5/10/21-day) &middot; yield-curve slope &middot; VIX level &middot; SPX&ndash;bond rolling correlation</div>
+      <div class="stage-desc">EWMA mean return, downside deviation &amp; Sortino ratio (5/10/21-day) &middot; yield-curve slope &middot; VIX level &middot; S&amp;P 500&ndash;bond rolling correlation</div>
     </div>
   </div>
   <div class="arrow">&darr;</div>
@@ -169,7 +169,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
     <div class="stage-num">6</div>
     <div class="stage-body">
       <div class="stage-title">Daily forecast &rarr; position</div>
-      <div class="stage-desc"><span class="tag bull">Bullish</span> &rarr; hold SPX &middot; <span class="tag bear">Bearish</span> &rarr; hold cash</div>
+      <div class="stage-desc"><span class="tag bull">Bullish</span> &rarr; hold the S&amp;P 500 &middot; <span class="tag bear">Bearish</span> &rarr; hold cash (earning the Treasury bill rate). The main signal confirms the forecast over five consecutive days before the position changes</div>
     </div>
   </div>
 </div>
@@ -177,7 +177,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 <p style="padding: 0 28px; font-size: 13px; color: var(--ink-soft);">See <a href="about.html" style="color:var(--accent)">About</a> for what this is (and isn't) meant for, and its known limitations.</p>
 
   <div class="footer">
-    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; SPX / VIX via yfinance &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
+    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; S&amp;P 500 total return, VIX and bond index via yfinance and the paper's data &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
   </div>
 </div>
 </body>

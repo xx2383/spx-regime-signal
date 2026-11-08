@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About &middot; SPX Regime Signal</title>
+<title>About &middot; S&amp;P 500 Regime Signal</title>
 <style>
 
 :root {
@@ -98,7 +98,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 <body>
 <div class="card">
   <div class="masthead">
-    <span class="eyebrow">SPX &middot; Market Regime Model</span>
+    <span class="eyebrow">S&amp;P 500 &middot; Market Regime Model</span>
     <nav class="nav"><a href="index.html">Signal</a><a href="framework.html">Framework</a><a href="about.html" class="current">About</a></nav>
   </div>
   
@@ -108,7 +108,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 <section>
   <h2>Purpose</h2>
   <p>The goal here is not to maximize returns. It's to sidestep the worst outcomes. The model
-  tries to identify when SPX has entered a persistently unfavorable (bearish) regime, so that
+  tries to identify when the S&amp;P 500 has entered a persistently unfavorable (bearish) regime, so that
   instead of riding out a severe drawdown, you can hold cash or reallocate elsewhere until
   conditions improve. Historically this has meant giving up some upside during choppy or
   ambiguous periods, in exchange for avoiding the deepest, most damaging drawdowns (2008,
@@ -126,12 +126,13 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 <section>
   <h2>Limitations</h2>
   <ul>
-    <li><strong>No transaction costs or slippage.</strong> The backtest assumes frictionless
-    0/1 switching. Actual turnover from a six-month retrain cadence plus regime flips is not
-    free, and can meaningfully erode the numbers shown.</li>
+    <li><strong>Trading costs are an assumption.</strong> The backtest charges a one-way cost of
+    5 basis points on every change of position, and cash earns the 3-month Treasury bill rate.
+    Slippage and market impact are not modeled, and actual costs can be higher, especially for
+    large positions.</li>
     <li><strong>No liquidity modeling.</strong> Position changes are assumed to execute at the
     closing price with unlimited size.</li>
-    <li><strong>Single asset.</strong> This is built and tested on SPX alone. It has not been
+    <li><strong>Single asset.</strong> This is built and tested on the S&amp;P 500 total-return index alone. It has not been
     validated as a general-purpose regime signal for other assets.</li>
     <li><strong>Model instability near the live edge.</strong> The most recent walk-forward
     windows can be noisier than the long-run historical average &mdash; treat recent regime
@@ -147,7 +148,7 @@ section li { font-size: 14.5px; line-height: 1.7; color: var(--ink); margin-bott
 </div>
 
   <div class="footer">
-    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; SPX / VIX via yfinance &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
+    Jump-model regime classifier (penalized K-means &rarr; XGBoost) &middot; S&amp;P 500 total return, VIX and bond index via yfinance and the paper's data &middot; T10Y2Y, DGS2, DGS3MO via FRED &middot; <a href="index.html">&larr; back to signal</a>
   </div>
 </div>
 </body>
